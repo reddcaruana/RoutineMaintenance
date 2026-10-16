@@ -3,7 +3,6 @@ using UnityEngine.InputSystem;
 
 // Required by the script, and cannot be removed because they are essential
 [RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(PlayerInput))]
 public class PlayerMovement : MonoBehaviour
 {
     // SerializeField exposes a variable in Unity
@@ -13,7 +12,7 @@ public class PlayerMovement : MonoBehaviour
 
     private CharacterController controller;
     
-    private Vector2 input;
+    private Vector2 direction;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -24,14 +23,17 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var movement = new Vector3(input.x, 0, input.y);
+        var movement = new Vector3(direction.x, 0, direction.y) * speed;
+        
+        // check if there is input
+        if (direction.sqrMagnitude > 0.1f)
+            transform.forward = movement.normalized;
+        
         controller.Move(movement * Time.deltaTime);
     }
 
-    // Received by the PlayerInput component
-    // when WASD is pressed
-    private void OnMove(InputValue value)
+    public void Move(Vector2 input)
     {
-        input = value.Get<Vector2>() *  speed;
+        direction = input;
     }
 }

@@ -5,15 +5,23 @@ public class Door : MonoBehaviour
 {
     [SerializeField] private GameObject doorModel;
 
-    private void OnTriggerEnter(Collider other)
+    private bool isOpen;
+    
+    public void Open()
     {
-        if (other.CompareTag("Player"))
-            doorModel.SetActive(false);
+        if (isOpen)
+            return; // already open
+        
+        doorModel.SetActive(false);
+        isOpen = true;
     }
 
-    private void OnTriggerExit(Collider other)
+    public void Close()
     {
-        if (other.CompareTag("Player"))
-            doorModel.SetActive(true);
+        if (!isOpen)
+            return;
+        
+        doorModel.SetActive(true);
+        isOpen = false;
     }
 }
