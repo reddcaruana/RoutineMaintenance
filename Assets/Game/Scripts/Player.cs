@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,6 +11,9 @@ namespace Game.Scripts
         // A reference to the components attached
         private PlayerMovement movement;
         private PlayerInteraction interaction;
+
+        // Create an inventory for this player
+        private Inventory inventory = new();
 
         private void Awake()
         {
@@ -31,7 +33,7 @@ namespace Game.Scripts
 
         private void OnInteract(InputValue value)
         {
-            interaction.Interact();
+            interaction.Interact(inventory);
         }
     }
 }
