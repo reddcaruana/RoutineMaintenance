@@ -1,4 +1,7 @@
-public enum ItemType
+namespace Game.Scripts
 {
-    Fuse
+    public enum ItemType
+    {
+        Fuse
+    }
 }

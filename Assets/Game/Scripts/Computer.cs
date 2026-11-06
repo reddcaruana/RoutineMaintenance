@@ -1,32 +1,52 @@
+using System;
 using UnityEngine;
 
 namespace Game.Scripts
 {
-    public class Computer : MonoBehaviour, IInteractable
+    public class Computer : MonoBehaviour, IInteractable, IBroken
     {
         [SerializeField] private Door door;
         [SerializeField] private bool isBroken = true;
-        
-        public void Interact(Inventory inventory)
+
+        public event Action Broken;
+        public event Action Repaired;
+
+        /// <summary>
+        /// Read by all classes, but only I can write
+        /// </summary>
+        public bool IsBroken { get; private set; }
+
+        private void Start()
         {
-            if (isBroken) // I don't work
+            // Start by copying the design value
+            IsBroken = isBroken;
+            
+            if (IsBroken)
+                Broken?.Invoke(); // If Broken is not null, call the function
+            else
+                Repaired?.Invoke(); // If Repaired is not null, call the function
+        }
+
+        public void Interact(IInventory inventory)
+        {
+            if (IsBroken) // I don't work
             {
-                Debug.Log("I am broken");
                 // Broken and no fuse - doesn't work
                 if (!inventory.Contains(ItemType.Fuse))
-                {
-                    Debug.Log("You don't have a fuse.");
                     return;
-                }
 
-                Debug.Log("I am fixed");
                 inventory.Remove(ItemType.Fuse);
-                isBroken = false; // I was fixed
+                Fix();
                 return;
             }
 
-            Debug.Log("I feel used");
             door.Open();
+        }
+
+        public void Fix()
+        {
+            IsBroken = false; // I was fixed
+            Repaired?.Invoke(); // If Repaired is not null, call the function
         }
     }
 }

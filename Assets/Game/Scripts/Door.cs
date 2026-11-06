@@ -1,27 +1,29 @@
-using System;
 using UnityEngine;
 
-public class Door : MonoBehaviour
+namespace Game.Scripts
 {
-    [SerializeField] private GameObject doorModel;
+    public class Door : MonoBehaviour
+    {
+        [SerializeField] private GameObject doorModel;
 
-    private bool isOpen;
+        private bool isOpen;
     
-    public void Open()
-    {
-        if (isOpen)
-            return; // already open
+        public void Open()
+        {
+            if (isOpen)
+                return; // already open
         
-        doorModel.SetActive(false);
-        isOpen = true;
-    }
+            doorModel.SetActive(false);
+            isOpen = true;
+        }
 
-    public void Close()
-    {
-        if (!isOpen)
-            return;
+        public void Close()
+        {
+            if (!isOpen)
+                return;
         
-        doorModel.SetActive(true);
-        isOpen = false;
+            doorModel.SetActive(true);
+            isOpen = false;
+        }
     }
 }

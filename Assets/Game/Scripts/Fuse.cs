@@ -1,11 +1,13 @@
-using Game.Scripts;
 using UnityEngine;
 
-public class Fuse : MonoBehaviour, IInteractable
+namespace Game.Scripts
 {
-    public void Interact(Inventory inventory)
+    public class Fuse : MonoBehaviour, IInteractable
     {
-        inventory.Add(ItemType.Fuse);
-        Destroy(gameObject);
+        public void Interact(IInventory inventory)
+        {
+            inventory.Add(ItemType.Fuse);
+            Destroy(gameObject);
+        }
     }
 }

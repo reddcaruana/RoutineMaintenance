@@ -2,6 +2,8 @@ namespace Game.Scripts
 {
     public interface IInteractable
     {
-        void Interact(Inventory inventory);
+        // Doesn't care what kind of inventory it's using
+        // as long as the contract is respected
+        void Interact(IInventory inventory);
     }
 }
