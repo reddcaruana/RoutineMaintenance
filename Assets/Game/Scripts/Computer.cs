@@ -27,15 +27,14 @@ namespace Game.Scripts
                 Repaired?.Invoke(); // If Repaired is not null, call the function
         }
 
-        public void Interact(IInventory inventory)
+        public void Interact()
         {
             if (IsBroken) // I don't work
             {
                 // Broken and no fuse - doesn't work
-                if (!inventory.Contains(ItemType.Fuse))
+                if (!GameManager.Instance.Inventory.TryRemove(ItemType.Fuse, 1))
                     return;
 
-                inventory.Remove(ItemType.Fuse);
                 Fix();
                 return;
             }

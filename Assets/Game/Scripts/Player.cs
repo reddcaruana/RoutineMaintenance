@@ -15,18 +15,10 @@ namespace Game.Scripts
         private PlayerMovement movement;
         private PlayerInteraction interaction;
 
-        // Create an inventory for this player
-        private IInventory inventory = new Inventory();
-
         private void Awake()
         {
             movement = GetComponent<PlayerMovement>();
             interaction = GetComponent<PlayerInteraction>();
-        }
-
-        private void Start()
-        {
-            inventoryUI.SetInventory(inventory);
         }
 
         // Take input from Player Input and pass it on to the other scripts
@@ -41,7 +33,7 @@ namespace Game.Scripts
 
         private void OnInteract(InputValue value)
         {
-            interaction.Interact(inventory);
+            interaction.Interact();
         }
     }
 }

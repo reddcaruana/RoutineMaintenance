@@ -5,45 +5,69 @@ namespace Game.Scripts
 {
     public class Inventory : IInventory
     {
-        // Creates a list of items as soon as this
-        // class starts to exist.
-        private List<ItemType> items = new();
+        public event Action Changed;
 
-        public event Action<ItemType> Added;
-        public event Action<ItemType> Removed;
+        private Dictionary<ItemType, int> items = new();
 
-        /// <summary>
-        /// Adds an item to the inventory.
-        /// </summary>
-        public void Add(ItemType item)
+        public IReadOnlyDictionary<ItemType, int> Items => items;
+        
+        public bool TryAdd(ItemType item, int quantity)
         {
-            items.Add(item);
-            Added?.Invoke(item); // tell Added we added this item
+            if (quantity < 1)
+                throw new ArgumentOutOfRangeException(nameof(quantity));
+            
+            // try to get the number of existing item
+            items.TryGetValue(item, out var current); // Exports the quantity into current if the item exists
+            items[item] = current + quantity;
+            
+            Changed?.Invoke();
+            return true;
         }
 
-        /// <summary>
-        /// Removes an item from the inventory.
-        /// </summary>
-        public void Remove(ItemType item)
+        public bool TryRemove(ItemType item, int quantity)
         {
-            if (items.Remove(item))
-                Removed?.Invoke(item);
+            if (quantity < 1)
+                throw new ArgumentOutOfRangeException(nameof(quantity));
+
+            if (!items.TryGetValue(item, out var current)) // item doesn't exist (and current == 0)
+                return false;
+
+            if (current < quantity)
+                return false;
+
+            var remaining = current - quantity;
+            if (remaining <= 0)
+                items.Remove(item);
+            else
+                items[item] = remaining;
+
+            Changed?.Invoke();
+            return true;
         }
 
-        /// <summary>
-        /// Checks the inventory for an item.
-        /// </summary>
-        public bool Contains(ItemType item) => items.Contains(item);
+        public bool TryRemove(ItemType item)
+        {
+            var success = items.Remove(item);
+            
+            if (success)
+                Changed?.Invoke();
+            
+            return success;
+        }
+
+        public bool Contains(ItemType item, int quantity)
+            => items.TryGetValue(item, out var current) && current >= quantity;
     }
 
     public interface IInventory
     {
-        // Action<T> -> T is a generic type that represents a type of variable
-        event Action<ItemType> Added;
-        event Action<ItemType> Removed;
+        event Action Changed;
         
-        void Add(ItemType item);
-        void Remove(ItemType item);
-        bool Contains(ItemType item);
+        IReadOnlyDictionary<ItemType, int> Items { get; }
+        
+        bool TryAdd(ItemType item, int quantity);
+        bool TryRemove(ItemType item, int quantity);
+        bool TryRemove(ItemType item);
+        bool Contains(ItemType item, int quantity);
     }
 }

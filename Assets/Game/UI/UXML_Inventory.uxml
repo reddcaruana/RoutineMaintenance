@@ -1,0 +1,7 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Game/UI/USS_Inventory.uss?fileID=7433441132597879392&amp;guid=54587a0df7b4d43ccb4d67651c53b3c5&amp;type=3#USS_Inventory"/>
+    <ui:VisualElement name="InventoryWindow" style="flex-grow: 1;">
+        <ui:Label text="Inventory"/>
+        <ui:VisualElement name="InventoryContent" style="flex-grow: 1;"/>
+    </ui:VisualElement>
+</ui:UXML>

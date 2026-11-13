@@ -7,10 +7,11 @@ namespace Game.Scripts
     public class Container : MonoBehaviour, IInteractable
     {
         [SerializeField] private ItemType item;
+        [SerializeField] private int quantity = 1;
         
-        public void Interact(IInventory inventory)
+        public void Interact()
         {
-            inventory.Add(item);
+            GameManager.Instance.Inventory.TryAdd(item, quantity);
         }
     }
 }

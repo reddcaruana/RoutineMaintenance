@@ -1,34 +1,74 @@
 using System;
-using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Game.Scripts
 {
+    [RequireComponent(typeof(PanelRenderer))]
     public class InventoryUI : MonoBehaviour
     {
-        // I need to know what I'm linked with
-        private IInventory inventory;
+        // This is what is rendering the UI Document
+        private PanelRenderer panel;
 
-        // Set and subscribe
-        public void SetInventory(IInventory newInventory)
+        private VisualElement inventoryContents;
+
+        private void Awake()
         {
-            inventory = newInventory;
-            inventory.Added += OnItemAdded;
+            panel = GetComponent<PanelRenderer>();
+            panel.RegisterUIReloadCallback(OnUIReady);
         }
 
-        // Unsubscribe to clean up
+        private void Start()
+        {
+            if (GameManager.Instance)
+                GameManager.Instance.Inventory.Changed += OnInventoryChanged;
+        }
+
         private void OnDisable()
         {
-            // Player might not have set this at all; avoid errors
-            if (inventory != null)
+            
+            if (GameManager.Instance)
+                GameManager.Instance.Inventory.Changed -= OnInventoryChanged;
+        }
+
+        private void OnDestroy()
+        {
+            panel.UnregisterUIReloadCallback(OnUIReady);
+        }
+
+        private void OnUIReady(PanelRenderer panelRenderer, VisualElement rootElement, int version)
+        {
+            Debug.Log($"UI was reloaded with version {version}");
+
+            inventoryContents = rootElement.Q<VisualElement>("InventoryContent");
+        }
+
+        private void OnInventoryChanged()
+        {
+            inventoryContents.Clear();
+
+            foreach (var (item, quantity) in GameManager.Instance.Inventory.Items)
             {
-                inventory.Added -= OnItemAdded;
+                CreateItem(item, quantity);
             }
         }
 
-        private void OnItemAdded(ItemType item)
+        private void CreateItem(ItemType item, int quantity)
         {
-            Debug.Log($"Added a(n) {item}");
+            var container = new VisualElement(); // outer div
+            container.AddToClassList("inventory__item");
+            
+            var label = new Label($"{item} ({quantity})");
+            var dropBtn = new Button { text = "DROP" };
+            
+            // Anonymous function
+            dropBtn.clicked += () => GameManager.Instance.Inventory.TryRemove(item); 
+            
+            // Build the structure
+            container.Add(label);
+            container.Add(dropBtn);
+            
+            inventoryContents.Add(container);
         }
     }
 }

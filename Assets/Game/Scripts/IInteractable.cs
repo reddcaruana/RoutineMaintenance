@@ -4,6 +4,6 @@ namespace Game.Scripts
     {
         // Doesn't care what kind of inventory it's using
         // as long as the contract is respected
-        void Interact(IInventory inventory);
+        void Interact();
     }
 }
