@@ -1,0 +1,7 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Game/UI/USS_TitleScreen.uss?fileID=7433441132597879392&amp;guid=c70e96b3608204cfcad0d287a3deec03&amp;type=3#USS_TitleScreen"/>
+    <ui:VisualElement name="Background" style="flex-grow: 1;">
+        <ui:Label text="Routine Maintenance" name="Title"/>
+        <ui:Button text="Play" name="PlayButton"/>
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,4 +1,5 @@
 using System;
+using Game.Scripts.States;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
@@ -13,6 +14,10 @@ namespace Game.Scripts
 
         public static GameManager Instance => instance;
 
+        [SerializeField] private GameContext context;
+        
+        private readonly StateMachine stateMachine = new();
+        
         // Read-Only variable for Inventory
         public IInventory Inventory { get; } = new Inventory();
 
@@ -30,10 +35,27 @@ namespace Game.Scripts
             // If the scene changes, this object stays
         }
 
+        private void Start()
+        {
+            var titleState = new TitleState(context);
+            stateMachine.ChangeState(titleState);
+        }
+
+        private void Update()
+        {
+            stateMachine.Update();
+        }
+
         private void OnDestroy()
         {
             if (instance == this)
                 instance = null;
+        }
+
+        // For testing
+        public void ChangeStateToNull()
+        {
+            stateMachine.ChangeState(null);
         }
     }
 }
